@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pizza Order with Cart</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff7e6;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #d35400;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .toppings {
+      margin-top: 10px;
+    }
+
+    .toppings label {
+      font-weight: normal;
+      display: block;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #e67e22;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #d35400;
+    }
+
+    .cart {
+      margin-top: 30px;
+      border-top: 1px solid #ccc;
+      padding-top: 20px;
+    }
+
+    .cart-item {
+      background: #f9f9f9;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .message {
+      text-align: center;
+      color: green;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Order Your Pizza</h2>
+    <form id="pizzaForm">
+      <label for="name">Customer Name:</label>
+      <input type="text" id="name" required>
+
+      <label for="size">Pizza Size:</label>
+      <select id="size" required>
+        <option value="">-- Select Size --</option>
+        <option value="Small">Small</option>
+        <option value="Medium">Medium</option>
+        <option value="Large">Large</option>
+      </select>
+
+      <label>Toppings:</label>
+      <div class="toppings">
+        <label><input type="checkbox" name="toppings" value="Cheese"> Cheese</label>
+        <label><input type="checkbox" name="toppings" value="Pepperoni"> Pepperoni</label>
+        <label><input type="checkbox" name="toppings" value="Mushrooms"> Mushrooms</label>
+        <label><input type="checkbox" name="toppings" value="Onions"> Onions</label>
+        <label><input type="checkbox" name="toppings" value="Olives"> Olives</label>
+      </div>
+
+      <label for="quantity">Quantity:</label>
+      <input type="number" id="quantity" min="1" value="1" required>
+
+      <button type="button" onclick="addToCart()">Add to Cart</button>
+    </form>
+
+    <div class="cart" id="cart">
+      <h3>Cart Items</h3>
+      <div id="cartItems"></div>
+      <button id="placeOrderBtn" style="display:none;" onclick="placeOrder()">Place Order</button>
+    </div>
+
+    <div class="message" id="orderMessage"></div>
+  </div>
+
+  <script>
+    let cart = [];
+
+    function addToCart() {
+      const name = document.getElementById("name").value.trim();
+      const size = document.getElementById("size").value;
+      const quantity = document.getElementById("quantity").value;
+      const toppingElements = document.querySelectorAll('input[name="toppings"]:checked');
+
+      if (!name || !size || quantity < 1) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+
+      let toppings = [];
+      toppingElements.forEach(t => toppings.push(t.value));
+
+      const item = {
+        name,
+        size,
+        quantity,
+        toppings
+      };
+
+      cart.push(item);
+      updateCartDisplay();
+      document.getElementById("pizzaForm").reset();
+    }
+
+    function updateCartDisplay() {
+      const cartItemsDiv = document.getElementById("cartItems");
+      cartItemsDiv.innerHTML = "";
+
+      cart.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+          <strong>${item.quantity} x ${item.size} Pizza</strong><br>
+          Toppings: ${item.toppings.length > 0 ? item.toppings.join(", ") : "None"}<br>
+          Ordered by: ${item.name}
+        `;
+        cartItemsDiv.appendChild(div);
+      });
+
+      document.getElementById("placeOrderBtn").style.display = cart.length > 0 ? "block" : "none";
+    }
+
+    function placeOrder() {
+      if (cart.length === 0) return;
+
+      let message = `Thank you, ${cart[0].name}! Your order for ${cart.length} item(s) has been placed.`;
+      document.getElementById("orderMessage").innerText = message;
+
+      // Clear cart
+      cart = [];
+      updateCartDisplay();
+    }
+  </script>
+</body>
+</html>

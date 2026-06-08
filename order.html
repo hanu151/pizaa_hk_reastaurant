@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pizza Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff7e6;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #d35400;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .toppings {
+            margin-top: 10px;
+        }
+
+        .toppings label {
+            font-weight: normal;
+            display: block;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #d35400;
+        }
+
+        .message {
+            text-align: center;
+            color: green;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Order Your Pizza</h2>
+        <form id="pizzaForm">
+            <label for="name">Customer Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="size">Pizza Size:</label>
+            <select id="size" name="size" required>
+                <option value="">-- Select Size --</option>
+                <option value="Small">Small</option>
+                <option value="Medium">Medium</option>
+                <option value="Large">Large</option>
+            </select>
+
+            <label>Toppings:</label>
+            <div class="toppings">
+                <label><input type="checkbox" name="toppings" value="Cheese"> Cheese</label>
+                <label><input type="checkbox" name="toppings" value="Pepperoni"> Pepperoni</label>
+                <label><input type="checkbox" name="toppings" value="Mushrooms"> Mushrooms</label>
+                <label><input type="checkbox" name="toppings" value="Onions"> Onions</label>
+                <label><input type="checkbox" name="toppings" value="Olives"> Olives</label>
+            </div>
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+
+            <button type="submit"> Order now</button>
+        </form>
+
+        <div class="message" id="orderMessage"></div>
+    </div>
+
+    <script>
+        document.getElementById("pizzaForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById("name").value;
+            const size = document.getElementById("size").value;
+            const quantity = document.getElementById("quantity").value;
+            const toppingElements = document.querySelectorAll('input[name="toppings"]:checked');
+            
+            let toppings = [];
+            toppingElements.forEach(t => toppings.push(t.value));
+
+            const message = `Thank you, ${name}! You ordered ${quantity} ${size} pizza(s) with ${toppings.length > 0 ? toppings.join(", ") : "no extra toppings"}.`;
+            document.getElementById("orderMessage").innerText = message;
+
+            // Optionally reset form
+            // this.reset();
+        });
+    </script>
+</body>
+</html>
